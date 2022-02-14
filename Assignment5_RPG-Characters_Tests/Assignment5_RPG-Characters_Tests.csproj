@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Assignment5_RPG-Characters\Assignment5_RPG-Characters.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Assignment5_ RPG-Characters">
       <HintPath>..\Assignment5_RPG-Characters\bin\Debug\net5.0\Assignment5_ RPG-Characters.dll</HintPath>
     </Reference>
