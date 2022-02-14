@@ -6,7 +6,7 @@ namespace Assignment5__RPG_Characters
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var item = new Plate()
         }
     }
 }
