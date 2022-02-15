@@ -1,6 +1,7 @@
-﻿namespace Assignment5__RPG_Characters
+﻿
+namespace Assignment5__RPG_Characters
 {
-    public class Weapon : BaseItem
+    public class Weapon : IWeapon
     {
     }
 }

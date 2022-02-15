@@ -1,27 +1,41 @@
 ﻿namespace Assignment5__RPG_Characters
 {
-    public class Attributes
+    public struct PrimaryAttributes
     {
-        private int strength;
-        private int dexterity;
-        private int intelligence;
+        public int Strength { get; set; }
+        public int Dexterity { get; set; }
+        public int Intelligence { get; set; }
 
-        //Default
-        public Attributes()
+        /// <summary>
+        /// Sets properties
+        /// </summary>
+        /// <param name="strength"></param>
+        /// <param name="dexterity"></param>
+        /// <param name="intelligence"></param>
+        public PrimaryAttributes(int strength, int dexterity, int intelligence)
         {
-        }
-        //With parameters
-        public Attributes(int strength, int dexterity, int intelligence)
-        {
-            this.strength = strength;
-            this.dexterity = dexterity;
-            this.intelligence = intelligence;
+            this.Strength = strength;
+            this.Dexterity = dexterity;
+            this.Intelligence = intelligence;
         }
 
-        //Add two attributes together to return a new attribute
-        public static Attributes operator +(Attributes a) => a;
+        /// <summary>
+        /// Overloads the + operator. Add two attributes together to return a new attribute
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static PrimaryAttributes operator +(PrimaryAttributes a) => a;
 
-        public static Attributes operator +(Attributes a, Attributes b)
-            => new Attributes(a.strength * b.strength, a.dexterity + b.dexterity, a.intelligence + b.intelligence);
+        public static PrimaryAttributes operator +(PrimaryAttributes a, PrimaryAttributes b)
+            => new PrimaryAttributes(a.Strength * b.Strength, a.Dexterity + b.Dexterity, a.Intelligence + b.Intelligence);
+    }
+
+    /// <summary>
+    /// Data used to calculate damage with Weapon
+    /// </summary>
+    public struct WeaponAttributes
+    {
+        public int Damage { get; set; }
+        public int AttackSpeed { get; set; }
     }
 }

@@ -6,8 +6,8 @@ namespace Assignment5__RPG_Characters
 	{
 		private string name;
 		private int level;
-		private Attributes baseAttributes;
-		private Attributes totalAttributes;
+		private PrimaryAttributes baseAttributes;
+		private PrimaryAttributes totalAttributes;
 
 		public BaseHero()
 		{
