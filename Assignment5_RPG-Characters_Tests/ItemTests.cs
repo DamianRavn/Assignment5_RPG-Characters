@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Assignment5__RPG_Characters;
 using Xunit;
-using Assignment5__RPG_Characters;
 
 namespace Assignment5_RPG_Characters_Tests
 {
@@ -11,79 +10,68 @@ namespace Assignment5_RPG_Characters_Tests
         public void Equip_EquipHighLevelWeapon_InvalidWeaponException()
         {
             //Arrange
-            Warrior warrior = new Warrior();
-            Weapon testAxe = new Weapon()
-            {
-                ItemName = "Common axe",
-                ItemLevel = 2,
-                ItemSlot = Slot.SLOT_WEAPON,
-                WeaponType = WeaponType.WEAPON_AXE,
-                WeaponAttributes = new WeaponAttributes() { Damage = 7, AttackSpeed = 1.1 }
-            };
+            var hero = new Warrior("Gimli");
+            var testAxe = new Weapon("Common axe", 2, WeaponType.AXE, 7, 1.1f);
+
             //Act
+            //...
 
             //Assert
+            Assert.Throws<InvalidWeaponException>(() => hero.Equip(testAxe));
         }
         [Fact]
         public void Equip_EquipHighLevelArmor_InvalidArmorException()
         {
             //Arrange
-            Warrior warrior = new Warrior();
-            Armour testPlateBody = new Armor()
-            {
-                ItemName = "Common plate body armor",
-                ItemLevel = 2,
-                ItemSlot = Slot.SLOT_BODY,
-                ArmourType = ArmourType.ARMOUR_PLATE,
-                Attributes = new PrimaryAttributes() { Strength = 1 }
-            };
+            var hero = new Warrior("Gimli");
+            var testPlateBody = new Armor("Common plate body armor", 2, ItemSlot.BODY, ArmorType.PLATE, new PrimaryAttributes(1, 0, 0));
+
             //Act
+            //...
 
             //Assert
+            Assert.Throws<InvalidArmorException>(() => hero.Equip(testPlateBody));
         }
         [Fact]
         public void Equip_EquipWrongWeaponType_InvalidWeaponException()
         {
             //Arrange
-            Warrior warrior = new Warrior();
-            Weapon testBow = new Weapon()
-            {
-                ItemName = "Common bow",
-                ItemLevel = 1,
-                ItemSlot = Slot.SLOT_WEAPON,
-                WeaponType = WeaponType.WEAPON_BOW,
-                WeaponAttributes = new WeaponAttributes() { Damage = 12, AttackSpeed = 0.8 }
-            };
+            var hero = new Warrior("Gimli");
+            var testBow = new Weapon("Common bow", 1, WeaponType.BOW, 12, 0.8f);
+
             //Act
+            //...
 
             //Assert
+            Assert.Throws<InvalidWeaponException>(() => hero.Equip(testBow));
         }
         [Fact]
         public void Equip_EquipValidWeapon_SuccessMessage()
         {
             //Arrange
-            string expected = "New weapon equipped!"; 
-            Warrior warrior = new Warrior();
-            Armour testClothHead = new Armor()
-            {
-                ItemName = "Common cloth head armor",
-                ItemLevel = 1,
-                ItemSlot = Slot.SLOT_HEAD,
-                ArmourType = ArmourType.ARMOUR_CLOTH,
-                Attributes = new PrimaryAttributes() { Intelligence = 5 }
-            };
+            string expected = "New weapon equipped!";
+            var hero = new Warrior("Gimli");
+            var testAxe = new Weapon("Common axe", 1, WeaponType.AXE, 7, 1.1f);
+
             //Act
+            string actual = hero.Equip(testAxe);
 
             //Assert
+            Assert.Equal(expected, actual);
         }
         [Fact]
         public void Equip_EquipValidArmor_SuccessMessage()
         {
             //Arrange
             string expected = "New armour equipped!";
+            var hero = new Warrior("Gimli");
+            var testPlateBody = new Armor("Common plate body armor", 1, ItemSlot.BODY, ArmorType.PLATE, new PrimaryAttributes(1, 0, 0));
+
             //Act
+            string actual = hero.Equip(testPlateBody);
 
             //Assert
+            Assert.Equal(expected, actual);
         }
 
         //Damage
@@ -91,49 +79,46 @@ namespace Assignment5_RPG_Characters_Tests
         public void Damage_CalculateDamageWithNoWeapon_ExpectedDamage()
         {
             //Arrange
-            int expected = 1 * (1 + (5 / 100));
-            Warrior warrior = new Warrior();
+            float expected = 1 * (1 + (5 / 100));
+            var hero = new Warrior("Gimli");
+
             //Act
+            var actual = hero.Damage();
 
             //Assert
+            Assert.Equal(expected, actual);
         }
         [Fact]
         public void Damage_CalculateDamageWithValidWeapon_ExpectedDamage()
         {
             //Arrange
-            int expected = (7 * 1.1) * (1 + (5 / 100));
-            Warrior warrior = new Warrior();
-            //Axe
+            float expected = (7 * 1.1f) * (1 + (5 / 100));
+            var hero = new Warrior("Gimli");
+            var testAxe = new Weapon("Common axe", 1, WeaponType.AXE, 7, 1.1f);
+
             //Act
+            hero.Equip(testAxe);
+            var actual = hero.Damage();
 
             //Assert
+            Assert.Equal(expected, actual);
         }
         [Fact]
-        public void Damage_CalculateDamageWithValidWeapon_ExpectedDamage()
+        public void Damage_CalculateDamageWithValidWeaponAndArmor_ExpectedDamage()
         {
             //Arrange
-            int expected = (7 * 1.1) * (1 + ((5 + 1) / 100));
-            Warrior warrior = new Warrior();
+            float expected = (7 * 1.1f) * (1 + ((5 + 1) / 100));
+            var hero = new Warrior("Gimli");
+            var testAxe = new Weapon("Common axe", 1, WeaponType.AXE, 7, 1.1f);
+            var testPlateBody = new Armor("Common plate body armor", 1, ItemSlot.BODY, ArmorType.PLATE, new PrimaryAttributes(1, 0, 0));
 
-            Armour testPlateBody = new Armor()
-            {
-                ItemName = "Common plate body armor",
-                ItemLevel = 1,
-                ItemSlot = Slot.SLOT_BODY,
-                ArmourType = ArmourType.ARMOUR_PLATE,
-                Attributes = new PrimaryAttributes() { Strength = 1 }
-            };
-            Weapon testAxe = new Weapon()
-            {
-                ItemName = "Common axe",
-                ItemLevel = 1,
-                ItemSlot = Slot.SLOT_WEAPON,
-                WeaponType = WeaponType.WEAPON_AXE,
-                WeaponAttributes = new WeaponAttributes() { Damage = 7, AttackSpeed = 1.1 }
-            };
             //Act
+            hero.Equip(testPlateBody);
+            hero.Equip(testAxe);
+            var actual = hero.Damage();
 
             //Assert
+            Assert.Equal(expected, actual);
         }
 
     }
