@@ -1,8 +1,8 @@
 ﻿namespace Assignment5__RPG_Characters
 {
     public enum ItemSlot { WEAPON, BODY, HEAD, LEGS}
-    public enum WeaponType { AXE, BOW, DAGGER, HAMMER, STAFF, SWORD, WAND }
-    public enum ArmourType { CLOTH, LEATHER, MAIL, PLATE }
+    public enum WeaponType { FISTS, AXE, BOW, DAGGER, HAMMER, STAFF, SWORD, WAND }
+    public enum ArmorType { CLOTH, LEATHER, MAIL, PLATE }
 
     /// <summary>
     /// A Base item. Any item should have this component
@@ -13,16 +13,13 @@
         public int ItemLevel { get; set; }
         public ItemSlot ItemSlot { get; set; }
 
-        public ItemComponent()
+        public ItemComponent(string itemName, int itemLevel, ItemSlot itemSlot)
         {
+            ItemName = itemName;
+            ItemLevel = itemLevel;
+            ItemSlot = itemSlot;
         }
-
-        public ItemComponent(string name, int level, ItemSlot itemSlot)
-        {
-            this.name = name;
-            this.level = level;
-            this.itemSlot = itemSlot;
-        }
+        
     }
 
     /// <summary>
@@ -30,8 +27,15 @@
     /// </summary>
     public struct WeaponComponent
     {
+
         public WeaponType WeaponType { get; set; }
-        public WeaponAttribute WeaponAttribute { get; set; }
+        public WeaponAttributes WeaponAttributes { get; set; }
+        
+        public WeaponComponent(WeaponType type, int baseDamage, float attackSpeed) : this()
+        {
+            WeaponType = type;
+            WeaponAttributes = new WeaponAttributes(baseDamage, attackSpeed);
+        }
     }
 
     /// <summary>
@@ -39,7 +43,13 @@
     /// </summary>
     public struct ArmorComponent
     {
-        public ArmourType ArmourType { get; set; }
+        public ArmorType ArmorType { get; set; }
         public PrimaryAttributes Attributes { get; set; }
+
+        public ArmorComponent(ArmorType armourType, PrimaryAttributes attributes)
+        {
+            ArmorType = armourType;
+            Attributes = attributes;
+        }
     }
 }
