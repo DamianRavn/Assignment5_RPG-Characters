@@ -11,23 +11,26 @@ namespace Assignment5__RPG_Characters
         public WeaponComponent WeaponComponent { get; set; }
         public ItemComponent ItemComponent { get; set; }
 
-
-        public Weapon(string name, int level, ItemSlot itemSlot,  WeaponType type, int baseDamage, float attackSpeed)
+        /// <summary>
+        /// This constructor creates the components in this entity
+        /// </summary>
+        /// <param name="name">name of the weapon</param>
+        /// <param name="level">level of the weapon</param>
+        /// <param name="type">which weapontype</param>
+        /// <param name="baseDamage">damage of the weapon</param>
+        /// <param name="attackSpeed">attack speed of the weapon</param>
+        /// 
+        public Weapon(string name, int level, WeaponType type, int baseDamage, float attackSpeed)
         {
             WeaponComponent = new WeaponComponent(type, baseDamage, attackSpeed);
-            ItemComponent = new ItemComponent(name, level, itemSlot);
+            ItemComponent = new ItemComponent(name, level, ItemSlot.WEAPON);
         }
-
-        //public T GetAttributes<T>()
-        //{
-        //    return (T)(object)WeaponComponent.WeaponAttributes;
-        //}
 
         /// <summary>
         /// What type of weapon is it?
         /// </summary>
         /// <returns>Weapon type as a string</returns>
-        public string GetItemType()
+        public string GetItemTypeAsString()
         {
             return WeaponComponent.WeaponType.ToString();
         }
@@ -39,6 +42,15 @@ namespace Assignment5__RPG_Characters
         public Exception ItemException()
         {
             return new InvalidWeaponException();
+        }
+
+        /// <summary>
+        /// Part of the requiements is to return this message. so here it is
+        /// </summary>
+        /// <returns>a message</returns>
+        public string EquipMessage()
+        {
+            return "New weapon equipped!";
         }
     }
 }
