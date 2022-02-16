@@ -27,7 +27,17 @@
         public static PrimaryAttributes operator +(PrimaryAttributes a) => a;
 
         public static PrimaryAttributes operator +(PrimaryAttributes a, PrimaryAttributes b)
-            => new PrimaryAttributes(a.Strength * b.Strength, a.Dexterity + b.Dexterity, a.Intelligence + b.Intelligence);
+            => new PrimaryAttributes(a.Strength + b.Strength, a.Dexterity + b.Dexterity, a.Intelligence + b.Intelligence);
+
+        /// <summary>
+        /// Overloads the * operator. multiply two attributes together to return a new attribute
+        /// </summary>
+        /// <param name="a">primaryattribute</param>
+        /// <param name="b">multiplyer</param>
+        /// <returns>a new attribute that's the multiplication of each attribute</returns>
+        public static PrimaryAttributes operator *(PrimaryAttributes a, int b)
+            => new PrimaryAttributes(a.Strength * b, a.Dexterity * b, a.Intelligence * b);
+
     }
 
     /// <summary>
