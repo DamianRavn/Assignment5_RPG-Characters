@@ -9,9 +9,9 @@ namespace Assignment5__RPG_Characters
     {
         public ItemComponent ItemComponent { get; set; }
 
-        public string GetItemType();
+        public string GetItemTypeAsString();
         public Exception ItemException();
-        //public T GetAttributes<T>();
+        string EquipMessage();
     }
     /// <summary>
     /// Weapon interface uses the item interface, because then every object that uses the weapon interface is forced to use the item interface aswell (Since weapon is an item, this makes sense)
