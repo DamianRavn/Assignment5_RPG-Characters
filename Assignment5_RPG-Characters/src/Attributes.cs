@@ -36,6 +36,12 @@
     public struct WeaponAttributes
     {
         public int Damage { get; set; }
-        public int AttackSpeed { get; set; }
+        public float AttackSpeed { get; set; }
+
+        public WeaponAttributes(int damage, float attackSpeed)
+        {
+            Damage = damage;
+            AttackSpeed = attackSpeed;
+        }
     }
 }
