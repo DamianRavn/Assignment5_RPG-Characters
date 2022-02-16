@@ -1,25 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Assignment5__RPG_Characters
 {
+    /// <summary>
+    /// This should be the base of all new heroes.
+    /// </summary>
 	public abstract class BaseHero
 	{
         public string Name { get; set; }
         public int Level { get; set; }
-		public PrimaryAttributes BaseAttributes { get; set; }
-		public PrimaryAttributes TotalAttributes { get; set; }
+        public PrimaryAttributes BaseAttributes { get; set; }
+        private Weapon defaultWeapon;
+
+        protected PrimaryAttributes levelUpAttributes;
+        protected HashSet<string> usableEquipment;
 
         public Dictionary<ItemSlot, IItem> Equipment { get; set; }
 
-        protected HashSet<string> usableEquipment;
 
+        /// <summary>
+        /// Initializes the Equipment Dictionary and defaultWeapon, and adds defaultWeapon to equipment
+        /// </summary>
         public BaseHero()
 		{
             Equipment = new Dictionary<ItemSlot, IItem>();
             //makes calculating the damage easier if the hero has a weapon on creation, so i added the fist weapon.
-            var fist = new Weapon("fist", 1, ItemSlot.WEAPON, WeaponType.FISTS, 1, 1);
-            Equipment.Add(ItemSlot.WEAPON, fist);
+            var defaultWeapon = new Weapon("fist", 1, WeaponType.FISTS, 1, 1);
+            Equipment.Add(ItemSlot.WEAPON, defaultWeapon);
         }
 
         /// <summary>
@@ -35,14 +44,45 @@ namespace Assignment5__RPG_Characters
         /// <summary>
         /// Each hero has their own main attribute they use to increase damage.
         /// </summary>
-        /// <returns>Main attribute</returns>
-        protected abstract int GetMainAttribute();
+        /// <returns>Total Main attribute</returns>
+        protected abstract int TotalPrimaryAttribute();
 
+        protected PrimaryAttributes TotalAttributes()
+        {
+            PrimaryAttributes armorAttr = EquippedItemsAttr();
+            return BaseAttributes + armorAttr;
+        }
+
+        /// <summary>
+        /// One level up. Increases Level and BaseAttributes
+        /// </summary>
+        public void LevelUp()
+        {
+            Level += 1;
+            BaseAttributes += levelUpAttributes;
+        }
+
+        /// <summary>
+        /// Calculate the damage
+        /// </summary>
+        /// <returns>Damage dealt</returns>
         public float Damage()
         {
-            var weapon = (Weapon)Equipment[ItemSlot.WEAPON];
-            var weaponAttr = weapon.WeaponComponent.WeaponAttributes; // Equipment[ItemSlot.WEAPON].GetAttributes<WeaponAttributes>();
-            return (weaponAttr.Damage * weaponAttr.AttackSpeed) * (1 * (1 + (GetMainAttribute() / 100)));
+            Weapon weapon;
+            //In case that a item was somehow equipped to the weapon slot
+            try
+            {
+                weapon = (Weapon)Equipment[ItemSlot.WEAPON];
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine("How did you equip a non-weapon to the weaponslot?? " + e.Message);
+                Equipment[ItemSlot.WEAPON] = defaultWeapon;
+                weapon = defaultWeapon;
+            }
+            
+            var weaponAttr = weapon.WeaponComponent.WeaponAttributes;
+            return (weaponAttr.Damage * weaponAttr.AttackSpeed) * (1 * (1 + (TotalPrimaryAttribute() / 100)));
         }
 
         /// <summary>
@@ -55,16 +95,59 @@ namespace Assignment5__RPG_Characters
         }
 
         /// <summary>
+        /// Adds together all the armor equipped together
+        /// </summary>
+        /// <returns>the attributes of all the armor</returns>
+        protected PrimaryAttributes EquippedItemsAttr()
+        {
+            PrimaryAttributes armorAttr = new PrimaryAttributes(0, 0, 0);
+            foreach (var armor in Equipment)
+            {
+                //This wouldn't be necessary if weapon could be seperated from armor, but as far as I understand the requirement, it has to be.
+                try
+                {
+                    armorAttr += ((Armor)armor.Value).ArmorComponent.Attributes;
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+                
+            }
+
+            return armorAttr;
+        }
+
+        /// <summary>
         /// Equips an item, throws invalid exception if item isn't usable by hero
         /// </summary>
         /// <param name="item">item to be equipped</param>
-		public void Equip(IItem item)
+        /// <returns>success message if succeeded</returns>
+		public string Equip(IItem item)
         {
-            //Check if item is equipable. The item knows whether it needs to throw invalid weapon or armor exception, let it deal with it
-            if (!usableEquipment.Contains(item.GetItemType()) || item.ItemComponent.ItemLevel > Level) throw item.ItemException();
+            //Check if item is equipable. The item knows whether it needs to throw invalid weapon or armor exception
+            if (!usableEquipment.Contains(item.GetItemTypeAsString()) || item.ItemComponent.ItemLevel > Level) throw item.ItemException();
 
             //Item is equipable
-            Equipment.Add(item.ItemComponent.ItemSlot, item);
+            Equipment[item.ItemComponent.ItemSlot] = item;
+
+            return item.EquipMessage();
+        }
+
+        /// <summary>
+        /// Overrides tostring to build a character sheet
+        /// </summary>
+        /// <returns>a string containing the character sheet</returns>
+        public override string ToString()
+        {
+            StringBuilder bob = new StringBuilder();
+            bob.Append($"Name: {Name} \n");
+            bob.Append($"Level: {Level} \n");
+            bob.Append($"Strength: {TotalAttributes().Strength} \n");
+            bob.Append($"Dexterity: {TotalAttributes().Dexterity} \n");
+            bob.Append($"Intelligence: {TotalAttributes().Intelligence} \n");
+            bob.Append($"Damage: {Damage()}");
+            return bob.ToString();
         }
     }
 }
