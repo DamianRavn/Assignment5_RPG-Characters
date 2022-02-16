@@ -3,6 +3,9 @@ using System.Runtime.Serialization;
 
 namespace Assignment5__RPG_Characters
 {
+    /// <summary>
+    /// Throw this when the hero tries to equip a weapon that they can't equip
+    /// </summary>
     [Serializable]
     public class InvalidWeaponException : Exception
     {
@@ -23,6 +26,9 @@ namespace Assignment5__RPG_Characters
         }
     }
 
+    /// <summary>
+    /// Throw this when the hero tries to equip a piece of armor that they can't equip
+    /// </summary>
     [Serializable]
     public class InvalidArmorException : Exception
     {
